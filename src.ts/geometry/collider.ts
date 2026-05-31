@@ -992,10 +992,15 @@ export class Collider {
      *   (if the point is located inside of an hollow shape, it is projected on the shape's
      *   boundary).
      */
-    public projectPoint(point: Vector, solid: boolean): PointProjection | null {
+    public projectPoint(
+        point: Vector,
+        solid: boolean,
+        target?: PointProjection,
+    ): PointProjection | null {
         let rawPoint = VectorOps.intoRaw(point);
-        let result = PointProjection.fromRaw(
+        let result = PointProjection.fromBuffer(
             this.colliderSet.raw.coProjectPoint(this.handle, rawPoint, solid),
+            target,
         );
 
         rawPoint.free();
@@ -1073,15 +1078,13 @@ export class Collider {
             stopAtPenetration,
         );
 
-        rawShapeCastHit.getComponents(scratchBuffer);
+        let result = null;
+        if (rawShapeCastHit) {
+            rawShapeCastHit.getComponents(scratchBuffer);
+            result = ShapeCastHit.fromBuffer(null, scratchBuffer, target);
+            rawShapeCastHit.free();
+        }
 
-        let result = ShapeCastHit.fromBuffer(
-            null,
-            scratchBuffer,
-            target,
-        );
-
-        rawShapeCastHit.free();
         rawCollider1Vel.free();
         rawShape2Pos.free();
         rawShape2Rot.free();
@@ -1129,17 +1132,19 @@ export class Collider {
             stopAtPenetration,
         );
 
-        const colliderHandle: number = rawColliderShapeCastHit.colliderHandle();
+        let result = null;
+        if (rawColliderShapeCastHit) {
+            const colliderHandle: number =
+                rawColliderShapeCastHit.colliderHandle();
+            rawColliderShapeCastHit.getComponents(scratchBuffer);
+            result = ColliderShapeCastHit.fromBuffer(
+                this.colliderSet.get(colliderHandle),
+                scratchBuffer,
+                target,
+            );
+            rawColliderShapeCastHit.free();
+        }
 
-        rawColliderShapeCastHit.getComponents(scratchBuffer);
-
-        let result = ColliderShapeCastHit.fromBuffer(
-            this.colliderSet.get(colliderHandle),
-            scratchBuffer,
-            target
-        );
-
-        rawColliderShapeCastHit.free();
         rawCollider1Vel.free();
         rawCollider2Vel.free();
 
@@ -1183,12 +1188,13 @@ export class Collider {
         shape2Pos: Vector,
         shape2Rot: Rotation,
         prediction: number,
+        target?: ShapeContact,
     ): ShapeContact | null {
         let rawPos2 = VectorOps.intoRaw(shape2Pos);
         let rawRot2 = RotationOps.intoRaw(shape2Rot);
         let rawShape2 = shape2.intoRaw();
 
-        let result = ShapeContact.fromRaw(
+        let result = ShapeContact.fromBuffer(
             this.colliderSet.raw.coContactShape(
                 this.handle,
                 rawShape2,
@@ -1196,6 +1202,7 @@ export class Collider {
                 rawRot2,
                 prediction,
             ),
+            target,
         );
 
         rawPos2.free();
@@ -1215,13 +1222,15 @@ export class Collider {
     contactCollider(
         collider2: Collider,
         prediction: number,
+        target?: ShapeContact,
     ): ShapeContact | null {
-        let result = ShapeContact.fromRaw(
+        let result = ShapeContact.fromBuffer(
             this.colliderSet.raw.coContactCollider(
                 this.handle,
                 collider2.handle,
                 prediction,
             ),
+            target,
         );
 
         return result;
@@ -1271,10 +1280,11 @@ export class Collider {
         ray: Ray,
         maxToi: number,
         solid: boolean,
+        target?: RayIntersection,
     ): RayIntersection | null {
         let rawOrig = VectorOps.intoRaw(ray.origin);
         let rawDir = VectorOps.intoRaw(ray.dir);
-        let result = RayIntersection.fromRaw(
+        let result = RayIntersection.fromBuffer(
             this.colliderSet.raw.coCastRayAndGetNormal(
                 this.handle,
                 rawOrig,
@@ -1282,6 +1292,7 @@ export class Collider {
                 maxToi,
                 solid,
             ),
+            target,
         );
 
         rawOrig.free();

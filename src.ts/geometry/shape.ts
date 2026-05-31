@@ -134,7 +134,8 @@ export abstract class Shape {
             // #endif
 
             case RawShapeType.HalfSpace:
-                normal = VectorOps.fromRaw(rawSet.coHalfspaceNormal(handle));
+                rawSet.coHalfspaceNormal(handle, scratchBuffer);
+                normal = VectorOps.fromBuffer(scratchBuffer);
                 return new HalfSpace(normal);
 
             case RawShapeType.Voxels:
@@ -274,15 +275,13 @@ export abstract class Shape {
             stopAtPenetration,
         );
 
-        rawShapeCastHit.getComponents(scratchBuffer);
+        let result = null;
+        if (rawShapeCastHit) {
+            rawShapeCastHit.getComponents(scratchBuffer);
+            result = ShapeCastHit.fromBuffer(null, scratchBuffer, target);
+            rawShapeCastHit.free();
+        }
 
-        let result = ShapeCastHit.fromBuffer(
-            null,
-            scratchBuffer,
-            target,
-        );
-
-        rawShapeCastHit.free();
         rawPos1.free();
         rawRot1.free();
         rawVel1.free();
@@ -358,6 +357,7 @@ export abstract class Shape {
         shapePos2: Vector,
         shapeRot2: Rotation,
         prediction: number,
+        target?: ShapeContact,
     ): ShapeContact | null {
         let rawPos1 = VectorOps.intoRaw(shapePos1);
         let rawRot1 = RotationOps.intoRaw(shapeRot1);
@@ -367,7 +367,7 @@ export abstract class Shape {
         let rawShape1 = this.intoRaw();
         let rawShape2 = shape2.intoRaw();
 
-        let result = ShapeContact.fromRaw(
+        let result = ShapeContact.fromBuffer(
             rawShape1.contactShape(
                 rawPos1,
                 rawRot1,
@@ -376,6 +376,7 @@ export abstract class Shape {
                 rawRot2,
                 prediction,
             ),
+            target,
         );
 
         rawPos1.free();
@@ -414,14 +415,16 @@ export abstract class Shape {
         shapeRot: Rotation,
         point: Vector,
         solid: boolean,
+        target?: PointProjection,
     ): PointProjection {
         let rawPos = VectorOps.intoRaw(shapePos);
         let rawRot = RotationOps.intoRaw(shapeRot);
         let rawPoint = VectorOps.intoRaw(point);
         let rawShape = this.intoRaw();
 
-        let result = PointProjection.fromRaw(
+        let result = PointProjection.fromBuffer(
             rawShape.projectPoint(rawPos, rawRot, rawPoint, solid),
+            target,
         );
 
         rawPos.free();
@@ -498,6 +501,7 @@ export abstract class Shape {
         shapeRot: Rotation,
         maxToi: number,
         solid: boolean,
+        target?: RayIntersection,
     ): RayIntersection {
         let rawPos = VectorOps.intoRaw(shapePos);
         let rawRot = RotationOps.intoRaw(shapeRot);
@@ -505,7 +509,7 @@ export abstract class Shape {
         let rawRayDir = VectorOps.intoRaw(ray.dir);
         let rawShape = this.intoRaw();
 
-        let result = RayIntersection.fromRaw(
+        let result = RayIntersection.fromBuffer(
             rawShape.castRayAndGetNormal(
                 rawPos,
                 rawRot,
@@ -514,6 +518,7 @@ export abstract class Shape {
                 maxToi,
                 solid,
             ),
+            target,
         );
 
         rawPos.free();

@@ -111,10 +111,11 @@ export class BroadPhase {
         filterExcludeCollider?: ColliderHandle,
         filterExcludeRigidBody?: RigidBodyHandle,
         filterPredicate?: (collider: ColliderHandle) => boolean,
+        target?: RayColliderIntersection,
     ): RayColliderIntersection | null {
         let rawOrig = VectorOps.intoRaw(ray.origin);
         let rawDir = VectorOps.intoRaw(ray.dir);
-        let result = RayColliderIntersection.fromRaw(
+        let result = RayColliderIntersection.fromBuffer(
             colliders,
             this.raw.castRayAndGetNormal(
                 narrowPhase.raw,
@@ -130,6 +131,7 @@ export class BroadPhase {
                 filterExcludeRigidBody,
                 filterPredicate,
             ),
+            target,
         );
 
         rawOrig.free();
@@ -170,7 +172,7 @@ export class BroadPhase {
         let rawDir = VectorOps.intoRaw(ray.dir);
         let rawCallback = (rawInter: RawRayColliderIntersection) => {
             return callback(
-                RayColliderIntersection.fromRaw(colliders, rawInter),
+                RayColliderIntersection.fromBuffer(colliders, rawInter),
             );
         };
 
@@ -265,9 +267,10 @@ export class BroadPhase {
         filterExcludeCollider?: ColliderHandle,
         filterExcludeRigidBody?: RigidBodyHandle,
         filterPredicate?: (collider: ColliderHandle) => boolean,
+        target?: PointColliderProjection,
     ): PointColliderProjection | null {
         let rawPoint = VectorOps.intoRaw(point);
-        let result = PointColliderProjection.fromRaw(
+        let result = PointColliderProjection.fromBuffer(
             colliders,
             this.raw.projectPoint(
                 narrowPhase.raw,
@@ -281,6 +284,7 @@ export class BroadPhase {
                 filterExcludeRigidBody,
                 filterPredicate,
             ),
+            target,
         );
 
         rawPoint.free();
@@ -306,9 +310,10 @@ export class BroadPhase {
         filterExcludeCollider?: ColliderHandle,
         filterExcludeRigidBody?: RigidBodyHandle,
         filterPredicate?: (collider: ColliderHandle) => boolean,
+        target?: PointColliderProjection,
     ): PointColliderProjection | null {
         let rawPoint = VectorOps.intoRaw(point);
-        let result = PointColliderProjection.fromRaw(
+        let result = PointColliderProjection.fromBuffer(
             colliders,
             this.raw.projectPointAndGetFeature(
                 narrowPhase.raw,
@@ -321,6 +326,7 @@ export class BroadPhase {
                 filterExcludeRigidBody,
                 filterPredicate,
             ),
+            target,
         );
 
         rawPoint.free();
@@ -431,17 +437,19 @@ export class BroadPhase {
             filterPredicate,
         );
 
-        const colliderHandle: number = rawColliderShapeCastHit.colliderHandle();
+        let result = null;
+        if (rawColliderShapeCastHit) {
+            const colliderHandle: number =
+                rawColliderShapeCastHit.colliderHandle();
+            rawColliderShapeCastHit.getComponents(scratchBuffer);
+            result = ColliderShapeCastHit.fromBuffer(
+                colliders.get(colliderHandle),
+                scratchBuffer,
+                target,
+            );
+            rawColliderShapeCastHit.free();
+        }
 
-        rawColliderShapeCastHit.getComponents(scratchBuffer);
-
-        let result = ColliderShapeCastHit.fromBuffer(
-            colliders.get(colliderHandle),
-            scratchBuffer,
-            target
-        );
-
-        rawColliderShapeCastHit.free();
         rawPos.free();
         rawRot.free();
         rawVel.free();

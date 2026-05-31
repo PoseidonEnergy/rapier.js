@@ -251,11 +251,42 @@ impl RawColliderSet {
         })
     }
 
-    pub fn coHalfspaceNormal(&self, handle: FlatHandle) -> Option<RawVector> {
+    /// The outward normal of this collider if it has a half-space shape.
+    ///
+    /// Returns `false` if it doesn’t have a half-space shape.
+    #[cfg(feature = "dim2")]
+    pub fn coHalfspaceNormal(
+        &self,
+        handle: FlatHandle,
+        scratch_buffer: &js_sys::Float32Array,
+    ) -> bool {
         self.map(handle, |co| {
-            co.shape()
-                .as_halfspace()
-                .map(|h| h.normal.into_inner().into())
+            co.shape().as_halfspace().map_or(false, |h| {
+                let u = h.normal.into_inner();
+                scratch_buffer.set_index(0, u.x);
+                scratch_buffer.set_index(1, u.y);
+                true
+            })
+        })
+    }
+
+    /// The outward normal of this collider if it has a half-space shape.
+    ///
+    /// Returns `false` if it doesn’t have a half-space shape.
+    #[cfg(feature = "dim3")]
+    pub fn coHalfspaceNormal(
+        &self,
+        handle: FlatHandle,
+        scratch_buffer: &js_sys::Float32Array,
+    ) -> bool {
+        self.map(handle, |co| {
+            co.shape().as_halfspace().map_or(false, |h| {
+                let u = h.normal.into_inner();
+                scratch_buffer.set_index(0, u.x);
+                scratch_buffer.set_index(1, u.y);
+                scratch_buffer.set_index(2, u.z);
+                true
+            })
         })
     }
 
