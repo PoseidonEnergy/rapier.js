@@ -185,7 +185,7 @@ export class ImpulseJoint {
      */
     public anchor1(target?: Vector): Vector {
         this.rawSet.jointAnchor1(this.handle, scratchBuffer);
-        return RotationOps.fromBuffer(scratchBuffer, target);
+        return VectorOps.fromBuffer(scratchBuffer, target);
     }
 
     /**
@@ -199,7 +199,7 @@ export class ImpulseJoint {
      */
     public anchor2(target?: Vector): Vector {
         this.rawSet.jointAnchor2(this.handle, scratchBuffer);
-        return RotationOps.fromBuffer(scratchBuffer, target);
+        return VectorOps.fromBuffer(scratchBuffer, target);
     }
 
     /**

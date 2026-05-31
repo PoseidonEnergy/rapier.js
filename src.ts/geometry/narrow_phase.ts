@@ -118,7 +118,7 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The contact normal of the manifold, expressed in world-space.
      *
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
@@ -129,7 +129,7 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The contact normal of the manifold, expressed in the local-space of the first shape.
      *
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
@@ -140,7 +140,7 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The contact normal of the manifold, expressed in the local-space of the second shape.
      *
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
@@ -163,9 +163,9 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The local-space contact point on the first shape, for the `i`-th contact.
      *
-     * @param {number} i
+     * @param {number} i - The index of the contact to read.
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
      */
@@ -175,9 +175,9 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The local-space contact point on the second shape, for the `i`-th contact.
      *
-     * @param {number} i
+     * @param {number} i - The index of the contact to read.
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
      */
@@ -223,9 +223,9 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The world-space position of the `i`-th solver contact point.
      *
-     * @param {number} i
+     * @param {number} i - The index of the solver contact to read.
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
      */
@@ -247,9 +247,9 @@ export class TempContactManifold {
     }
 
     /**
-     * (no description)
+     * The tangent (surface) velocity of the `i`-th solver contact point.
      *
-     * @param {number} i
+     * @param {number} i - The index of the solver contact to read.
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
      */

@@ -1,6 +1,8 @@
 use crate::dynamics::{RawRigidBodySet, RawRigidBodyType};
 use crate::geometry::RawColliderSet;
-use crate::math::{RawRotation, RawVector};
+#[cfg(feature = "dim3")]
+use crate::math::RawRotation;
+use crate::math::RawVector;
 use crate::utils::{self, FlatHandle};
 use na::Point;
 use rapier::dynamics::MassProperties;
@@ -8,16 +10,6 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 impl RawRigidBodySet {
-    /// The world-space translation of this rigid-body.
-    pub fn rbTranslationOriginal(&self, handle: FlatHandle) -> RawVector {
-        self.map(handle, |rb| RawVector(rb.position().translation.vector))
-    }
-
-    /// The world-space orientation of this rigid-body.
-    pub fn rbRotationOriginal(&self, handle: FlatHandle) -> RawRotation {
-        self.map(handle, |rb| RawRotation(rb.position().rotation))
-    }
-
     /// The world-space translation of this rigid-body.
     ///
     /// # Parameters

@@ -299,22 +299,6 @@ export class RigidBody {
 
     /**
      * The world-space translation of this rigid-body.
-     */
-    public translationOriginal(): Vector {
-        let res = this.rawSet.rbTranslationOriginal(this.handle);
-        return VectorOps.fromRaw(res);
-    }
-
-    /**
-     * The world-space orientation of this rigid-body.
-     */
-    public rotationOriginal(): Rotation {
-        let res = this.rawSet.rbRotationOriginal(this.handle);
-        return RotationOps.fromRaw(res);
-    }
-
-    /**
-     * The world-space translation of this rigid-body.
      *
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
@@ -728,7 +712,7 @@ export class RigidBody {
 
     // #if DIM3
     /**
-     * The square-root of the world-space inverse angular inertia tensor of the rigid-body,
+     * The world-space inverse angular inertia tensor of the rigid-body,
      * taking into account rotation locking.
      *
      * @param {SdpMatrix3?} target - The object to be populated. If provided,
