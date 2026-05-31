@@ -226,6 +226,48 @@ export class ImpulseJoint {
         rawPoint.free();
     }
 
+    // #if DIM3
+    /**
+     * Sets the rotation quaternion that aligns this joint's first local axis to the `x` axis.
+     */
+    public setFrameX1(rot: Rotation) {
+        const rawRot = RotationOps.intoRaw(rot);
+        this.rawSet.jointSetFrameX1(this.handle, rawRot);
+        rawRot.free();
+    }
+
+    /**
+     * Sets the rotation quaternion that aligns this joint's second local axis to the `x` axis.
+     */
+    public setFrameX2(rot: Rotation) {
+        const rawRot = RotationOps.intoRaw(rot);
+        this.rawSet.jointSetFrameX2(this.handle, rawRot);
+        rawRot.free();
+    }
+
+    /**
+     * Sets the full local frame (anchor position and rotation) for the first rigid-body attachment.
+     */
+    public setLocalFrame1(anchor: Vector, rot: Rotation) {
+        const rawAnchor = VectorOps.intoRaw(anchor);
+        const rawRot = RotationOps.intoRaw(rot);
+        this.rawSet.jointSetLocalFrame1(this.handle, rawAnchor, rawRot);
+        rawAnchor.free();
+        rawRot.free();
+    }
+
+    /**
+     * Sets the full local frame (anchor position and rotation) for the second rigid-body attachment.
+     */
+    public setLocalFrame2(anchor: Vector, rot: Rotation) {
+        const rawAnchor = VectorOps.intoRaw(anchor);
+        const rawRot = RotationOps.intoRaw(rot);
+        this.rawSet.jointSetLocalFrame2(this.handle, rawAnchor, rawRot);
+        rawAnchor.free();
+        rawRot.free();
+    }
+    // #endif
+
     /**
      * Controls whether contacts are computed between colliders attached
      * to the rigid-bodies linked by this joint.
@@ -285,6 +327,14 @@ export class UnitImpulseJoint extends ImpulseJoint {
             this.handle,
             this.rawAxis(),
             model as number as RawMotorModel,
+        );
+    }
+
+    public setMotorMaxForce(maxForce: number) {
+        this.rawSet.jointSetMotorMaxForce(
+            this.handle,
+            this.rawAxis(),
+            maxForce,
         );
     }
 
@@ -377,6 +427,10 @@ export class JointData {
     anchor1: Vector;
     anchor2: Vector;
     axis: Vector;
+    // #if DIM3
+    axis1: Vector;
+    axis2: Vector;
+    // #endif
     frame1: Rotation;
     frame2: Rotation;
     jointType: JointType;
@@ -596,6 +650,36 @@ export class JointData {
         res.jointType = JointType.Revolute;
         return res;
     }
+
+    /**
+     * Create a new joint descriptor that builds Revolute joints with independent
+     * local axes for each attached rigid-body.
+     *
+     * This is useful when the same world-space hinge axis is represented by
+     * different local axes on the two bodies.
+     *
+     * @param anchor1 - Point where the joint is attached on the first rigid-body affected by this joint. Expressed in the
+     *                  local-space of the rigid-body.
+     * @param anchor2 - Point where the joint is attached on the second rigid-body affected by this joint. Expressed in the
+     *                  local-space of the rigid-body.
+     * @param axis1 - Axis of the joint, expressed in the local-space of the first rigid-body.
+     * @param axis2 - Axis of the joint, expressed in the local-space of the second rigid-body.
+     */
+    public static revoluteWithAxes(
+        anchor1: Vector,
+        anchor2: Vector,
+        axis1: Vector,
+        axis2: Vector,
+    ): JointData {
+        let res = new JointData();
+        res.anchor1 = anchor1;
+        res.anchor2 = anchor2;
+        res.axis = axis1;
+        res.axis1 = axis1;
+        res.axis2 = axis2;
+        res.jointType = JointType.Revolute;
+        return res;
+    }
     // #endif
 
     public intoRaw(): RawGenericJoint {
@@ -682,9 +766,22 @@ export class JointData {
                 result = RawGenericJoint.spherical(rawA1, rawA2);
                 break;
             case JointType.Revolute:
-                rawAx = VectorOps.intoRaw(this.axis);
-                result = RawGenericJoint.revolute(rawA1, rawA2, rawAx);
-                rawAx.free();
+                if (!!this.axis1 && !!this.axis2) {
+                    let rawAx1 = VectorOps.intoRaw(this.axis1);
+                    let rawAx2 = VectorOps.intoRaw(this.axis2);
+                    result = RawGenericJoint.revoluteWithAxes(
+                        rawA1,
+                        rawA2,
+                        rawAx1,
+                        rawAx2,
+                    );
+                    rawAx1.free();
+                    rawAx2.free();
+                } else {
+                    rawAx = VectorOps.intoRaw(this.axis);
+                    result = RawGenericJoint.revolute(rawA1, rawA2, rawAx);
+                    rawAx.free();
+                }
                 break;
             // #endif
         }

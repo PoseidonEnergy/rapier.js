@@ -1,3 +1,21 @@
+## 0.19.3 (05 Nov. 2025)
+
+- Significantly improve performances of `combineVoxelStates`.
+
+### 0.19.2 (17 Oct. 2025)
+
+- Fix bug where kinematic bodies would not wake up when setting its velocity.
+- Fix bug where slow-moving kinematic bodies would fall asleep.
+- Fix point-projection on voxels shapes.
+
+### 0.19.1 (03 Oct. 2025)
+
+### Modified
+
+- Update to Rapier 0.30.0. The only change is a [switch to a sparse storage](https://github.com/dimforge/parry/pull/380)
+  for the Voxels shapes. This allows support for orders of magnitudes larger maps without reaching the 4GB WASM memory
+  limit.
+
 ### 0.19.0 (05 Sept. 2025)
 
 ### Modified
