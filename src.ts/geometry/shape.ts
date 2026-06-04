@@ -1,10 +1,4 @@
-import {
-    Vector,
-    VectorOps,
-    Rotation,
-    RotationOps,
-    scratchBuffer
-} from "../math";
+import {Vector, VectorOps, Rotation, RotationOps, scratchBuffer} from "../math";
 import {RawColliderSet, RawShape, RawShapeType} from "../raw";
 import {ShapeContact} from "./contact";
 import {PointProjection} from "./point";
@@ -47,15 +41,23 @@ export abstract class Shape {
                 // #endif
 
                 // #if DIM3
-                return new Cuboid(scratchBuffer[0], scratchBuffer[1], scratchBuffer[2]);
-                // #endif
+                return new Cuboid(
+                    scratchBuffer[0],
+                    scratchBuffer[1],
+                    scratchBuffer[2],
+                );
+            // #endif
 
             case RawShapeType.RoundCuboid:
                 borderRadius = rawSet.coRoundRadius(handle);
                 rawSet.coHalfExtents(handle, scratchBuffer);
 
                 // #if DIM2
-                return new RoundCuboid(scratchBuffer[0], scratchBuffer[1], borderRadius);
+                return new RoundCuboid(
+                    scratchBuffer[0],
+                    scratchBuffer[1],
+                    borderRadius,
+                );
                 // #endif
 
                 // #if DIM3
@@ -65,7 +67,7 @@ export abstract class Shape {
                     scratchBuffer[2],
                     borderRadius,
                 );
-                // #endif
+            // #endif
 
             case RawShapeType.Capsule:
                 halfHeight = rawSet.coHalfHeight(handle);
@@ -156,7 +158,7 @@ export abstract class Shape {
                 // #if DIM2
                 const scale = {
                     x: scratchBuffer[0],
-                    y: scratchBuffer[1]
+                    y: scratchBuffer[1],
                 };
                 return new Heightfield(heights, scale);
                 // #endif
@@ -165,13 +167,13 @@ export abstract class Shape {
                 const scale = {
                     x: scratchBuffer[0],
                     y: scratchBuffer[1],
-                    z: scratchBuffer[2]
+                    z: scratchBuffer[2],
                 };
                 const nrows = rawSet.coHeightfieldNRows(handle);
                 const ncols = rawSet.coHeightfieldNCols(handle);
                 const hf_flags = rawSet.coHeightFieldFlags(handle);
                 return new Heightfield(nrows, ncols, heights, scale, hf_flags);
-                // #endif
+            // #endif
 
             // #if DIM2
             case RawShapeType.ConvexPolygon:
@@ -250,7 +252,7 @@ export abstract class Shape {
         targetDistance: number,
         maxToi: number,
         stopAtPenetration: boolean,
-        target?: ShapeCastHit
+        target?: ShapeCastHit,
     ): ShapeCastHit | null {
         let rawPos1 = VectorOps.intoRaw(shapePos1);
         let rawRot1 = RotationOps.intoRaw(shapeRot1);

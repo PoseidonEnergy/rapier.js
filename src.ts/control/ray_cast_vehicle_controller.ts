@@ -171,8 +171,14 @@ export class DynamicRayCastVehicleController {
      * @param {Vector?} target - The object to be populated. If provided,
      * the function returns this object instead of creating a new one.
      */
-    public wheelChassisConnectionPointCs(i: number, target?: Vector): Vector | null {
-        const exists = this.raw.wheel_chassis_connection_point_cs(i, scratchBuffer);
+    public wheelChassisConnectionPointCs(
+        i: number,
+        target?: Vector,
+    ): Vector | null {
+        const exists = this.raw.wheel_chassis_connection_point_cs(
+            i,
+            scratchBuffer,
+        );
         return exists ? VectorOps.fromBuffer(scratchBuffer, target) : null;
     }
 

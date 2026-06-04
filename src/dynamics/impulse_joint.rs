@@ -129,16 +129,28 @@ impl RawImpulseJointSet {
     }
 
     /// Sets the full local frame (anchor + rotation) for the first rigid-body attachment.
-    pub fn jointSetLocalFrame1(&mut self, handle: FlatHandle, anchor: &RawVector, rot: &RawRotation) {
+    pub fn jointSetLocalFrame1(
+        &mut self,
+        handle: FlatHandle,
+        anchor: &RawVector,
+        rot: &RawRotation,
+    ) {
         self.map_mut(handle, |j| {
-            j.data.set_local_frame1(Isometry::from_parts(anchor.0.into(), rot.0));
+            j.data
+                .set_local_frame1(Isometry::from_parts(anchor.0.into(), rot.0));
         });
     }
 
     /// Sets the full local frame (anchor + rotation) for the second rigid-body attachment.
-    pub fn jointSetLocalFrame2(&mut self, handle: FlatHandle, anchor: &RawVector, rot: &RawRotation) {
+    pub fn jointSetLocalFrame2(
+        &mut self,
+        handle: FlatHandle,
+        anchor: &RawVector,
+        rot: &RawRotation,
+    ) {
         self.map_mut(handle, |j| {
-            j.data.set_local_frame2(Isometry::from_parts(anchor.0.into(), rot.0));
+            j.data
+                .set_local_frame2(Isometry::from_parts(anchor.0.into(), rot.0));
         });
     }
 

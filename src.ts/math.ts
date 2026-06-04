@@ -177,7 +177,10 @@ export class RotationOps {
         return new Quaternion(0.0, 0.0, 0.0, 1.0);
     }
 
-    public static fromBuffer(buffer: Float32Array, target?: Rotation): Rotation {
+    public static fromBuffer(
+        buffer: Float32Array,
+        target?: Rotation,
+    ): Rotation {
         if (!buffer) return null;
 
         target ??= RotationOps.identity();
@@ -286,8 +289,10 @@ export class SdpMatrix3 {
 }
 
 export class SdpMatrix3Ops {
-
-    public static fromBuffer(buffer: Float32Array, target?: SdpMatrix3): SdpMatrix3 {
+    public static fromBuffer(
+        buffer: Float32Array,
+        target?: SdpMatrix3,
+    ): SdpMatrix3 {
         if (!buffer) return null;
 
         target ??= new SdpMatrix3(buffer);

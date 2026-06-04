@@ -273,9 +273,12 @@ impl RawPidController {
             return;
         };
 
-        let u: Vector<f32> =
-            self.controller
-                .angular_rigid_body_correction(dt, rb, target_rotation.0, target_angvel.0);
+        let u: Vector<f32> = self.controller.angular_rigid_body_correction(
+            dt,
+            rb,
+            target_rotation.0,
+            target_angvel.0,
+        );
         scratch_buffer.set_index(0, u.x);
         scratch_buffer.set_index(1, u.y);
         scratch_buffer.set_index(2, u.z);

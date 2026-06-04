@@ -1,15 +1,5 @@
-import {
-    Rotation,
-    RotationOps,
-    Vector,
-    VectorOps,
-    scratchBuffer
-} from "../math";
-import {
-    CoefficientCombineRule,
-    RigidBody,
-    RigidBodySet,
-} from "../dynamics";
+import {Rotation, RotationOps, Vector, VectorOps, scratchBuffer} from "../math";
+import {CoefficientCombineRule, RigidBody, RigidBodySet} from "../dynamics";
 import {ActiveHooks, ActiveEvents} from "../pipeline";
 import {InteractionGroups} from "./interaction_groups";
 import {
@@ -191,7 +181,10 @@ export class Collider {
      * the function returns this object instead of creating a new one.
      */
     public translationWrtParent(target?: Vector): Vector | null {
-        const hasParent = this.colliderSet.raw.coTranslationWrtParent(this.handle, scratchBuffer);
+        const hasParent = this.colliderSet.raw.coTranslationWrtParent(
+            this.handle,
+            scratchBuffer,
+        );
         return hasParent ? VectorOps.fromBuffer(scratchBuffer, target) : null;
     }
 
@@ -239,7 +232,10 @@ export class Collider {
      * the function returns this object instead of creating a new one.
      */
     public rotationWrtParent(target?: Rotation): Rotation | null {
-        const hasParent = this.colliderSet.raw.coRotationWrtParent(this.handle, scratchBuffer);
+        const hasParent = this.colliderSet.raw.coRotationWrtParent(
+            this.handle,
+            scratchBuffer,
+        );
         return hasParent ? RotationOps.fromBuffer(scratchBuffer, target) : null;
     }
     // #endif
@@ -664,7 +660,10 @@ export class Collider {
      * the function returns this object instead of creating a new one.
      */
     public halfExtents(target?: Vector): Vector | null {
-        const isCuboid = this.colliderSet.raw.coHalfExtents(this.handle, scratchBuffer);
+        const isCuboid = this.colliderSet.raw.coHalfExtents(
+            this.handle,
+            scratchBuffer,
+        );
         return isCuboid ? VectorOps.fromBuffer(scratchBuffer, target) : null;
     }
 
@@ -886,8 +885,13 @@ export class Collider {
      * the function returns this object instead of creating a new one.
      */
     public heightfieldScale(target?: Vector): Vector | null {
-        const isHeightfield = this.colliderSet.raw.coHeightfieldScale(this.handle, scratchBuffer);
-        return isHeightfield ? VectorOps.fromBuffer(scratchBuffer, target) : null;
+        const isHeightfield = this.colliderSet.raw.coHeightfieldScale(
+            this.handle,
+            scratchBuffer,
+        );
+        return isHeightfield
+            ? VectorOps.fromBuffer(scratchBuffer, target)
+            : null;
     }
 
     // #if DIM3
@@ -1058,7 +1062,7 @@ export class Collider {
         targetDistance: number,
         maxToi: number,
         stopAtPenetration: boolean,
-        target?: ShapeCastHit
+        target?: ShapeCastHit,
     ): ShapeCastHit | null {
         let rawCollider1Vel = VectorOps.intoRaw(collider1Vel);
         let rawShape2Pos = VectorOps.intoRaw(shape2Pos);
@@ -1117,7 +1121,7 @@ export class Collider {
         targetDistance: number,
         maxToi: number,
         stopAtPenetration: boolean,
-        target?: ColliderShapeCastHit
+        target?: ColliderShapeCastHit,
     ): ColliderShapeCastHit | null {
         let rawCollider1Vel = VectorOps.intoRaw(collider1Vel);
         let rawCollider2Vel = VectorOps.intoRaw(collider2Vel);

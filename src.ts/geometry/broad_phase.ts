@@ -412,7 +412,7 @@ export class BroadPhase {
         filterExcludeCollider?: ColliderHandle,
         filterExcludeRigidBody?: RigidBodyHandle,
         filterPredicate?: (collider: ColliderHandle) => boolean,
-        target?: ColliderShapeCastHit
+        target?: ColliderShapeCastHit,
     ): ColliderShapeCastHit | null {
         let rawPos = VectorOps.intoRaw(shapePos);
         let rawRot = RotationOps.intoRaw(shapeRot);

@@ -1,10 +1,6 @@
 import {RawNarrowPhase, RawContactManifold} from "../raw";
 import {ColliderHandle} from "./collider";
-import {
-    Vector,
-    VectorOps,
-    scratchBuffer
-} from "../math";
+import {Vector, VectorOps, scratchBuffer} from "../math";
 
 /**
  * The narrow-phase used for precise collision-detection.

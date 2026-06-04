@@ -106,7 +106,11 @@ impl RawDynamicRayCastVehicleController {
      * Getters + setters
      */
     #[cfg(feature = "dim2")]
-    pub fn wheel_chassis_connection_point_cs(&self,i: usize,scratch_buffer: &js_sys::Float32Array) -> bool {
+    pub fn wheel_chassis_connection_point_cs(
+        &self,
+        i: usize,
+        scratch_buffer: &js_sys::Float32Array,
+    ) -> bool {
         self.controller.wheels().get(i).map_or(false, |w| {
             let u = w.chassis_connection_point_cs;
             scratch_buffer.set_index(0, u.x);
@@ -116,7 +120,11 @@ impl RawDynamicRayCastVehicleController {
     }
 
     #[cfg(feature = "dim3")]
-    pub fn wheel_chassis_connection_point_cs(&self, i: usize, scratch_buffer: &js_sys::Float32Array) -> bool {
+    pub fn wheel_chassis_connection_point_cs(
+        &self,
+        i: usize,
+        scratch_buffer: &js_sys::Float32Array,
+    ) -> bool {
         self.controller.wheels().get(i).map_or(false, |w| {
             let u = w.chassis_connection_point_cs;
             scratch_buffer.set_index(0, u.x);

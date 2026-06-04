@@ -47,7 +47,7 @@ export class ShapeCastHit {
     public static fromBuffer(
         collider: Collider,
         buffer: Float32Array,
-        target?: ShapeCastHit
+        target?: ShapeCastHit,
     ): ShapeCastHit {
         if (!buffer) return null;
 
@@ -56,7 +56,7 @@ export class ShapeCastHit {
             VectorOps.zeros(),
             VectorOps.zeros(),
             VectorOps.zeros(),
-            VectorOps.zeros()
+            VectorOps.zeros(),
         );
 
         target.time_of_impact = buffer[0];
@@ -80,7 +80,7 @@ export class ShapeCastHit {
         target.witness2.y = buffer[5];
         target.witness2.z = buffer[6];
         target.normal1.x = buffer[7];
-        target.normal1.y = buffer[8]
+        target.normal1.y = buffer[8];
         target.normal1.z = buffer[9];
         target.normal2.x = buffer[10];
         target.normal2.y = buffer[11];
@@ -115,7 +115,7 @@ export class ColliderShapeCastHit extends ShapeCastHit {
     public static fromBuffer(
         collider: Collider,
         buffer: Float32Array,
-        target?: ColliderShapeCastHit
+        target?: ColliderShapeCastHit,
     ): ColliderShapeCastHit {
         if (!buffer) return null;
 
@@ -125,7 +125,7 @@ export class ColliderShapeCastHit extends ShapeCastHit {
             VectorOps.zeros(),
             VectorOps.zeros(),
             VectorOps.zeros(),
-            VectorOps.zeros()
+            VectorOps.zeros(),
         );
 
         target.collider = collider;
@@ -151,7 +151,7 @@ export class ColliderShapeCastHit extends ShapeCastHit {
         target.witness2.y = buffer[5];
         target.witness2.z = buffer[6];
         target.normal1.x = buffer[7];
-        target.normal1.y = buffer[8]
+        target.normal1.y = buffer[8];
         target.normal1.z = buffer[9];
         target.normal2.x = buffer[10];
         target.normal2.y = buffer[11];

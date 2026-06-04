@@ -1,11 +1,5 @@
 import {RawRigidBodySet, RawRigidBodyType} from "../raw";
-import {
-    Rotation,
-    RotationOps,
-    Vector,
-    VectorOps,
-    scratchBuffer
-} from "../math";
+import {Rotation, RotationOps, Vector, VectorOps, scratchBuffer} from "../math";
 // #if DIM3
 import {SdpMatrix3, SdpMatrix3Ops} from "../math";
 // #endif
